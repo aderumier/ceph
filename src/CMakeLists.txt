@@ -634,11 +634,11 @@ add_dependencies(ceph-mon erasure_code_plugins)
 install(TARGETS ceph-mon DESTINATION bin)
 
 # OSD
-if(${HAVE_XFS})
+if(${HAVE_LIBXFS})
   set(libos_xfs_srcs
     os/filestore/XfsFileStoreBackend.cc
     os/fs/XFS.cc)
-endif(${HAVE_XFS})
+endif(${HAVE_LIBXFS})
 set(libos_srcs
   os/ObjectStore.cc
   os/Transaction.cc
@@ -953,6 +953,8 @@ if(WITH_LIBCEPHFS)
   target_link_libraries(cephfs LINK_PRIVATE client osdc osd os global common cls_lock_client
     ${BLKID_LIBRARIES}
     ${CRYPTO_LIBS} ${EXTRALIBS})
+  #this is a wip
+  target_compile_definitions(cephfs PRIVATE "-DVERSION="${VERSION}"")
 if(${ENABLE_SHARED})
   set_target_properties(cephfs PROPERTIES OUTPUT_NAME cephfs VERSION 1.0.0
     SOVERSION 1)
@@ -1200,10 +1202,6 @@ if(${WITH_RADOSGW})
   target_link_libraries(rgw_a librados cls_rgw_client cls_refcount_client
     cls_log_client cls_statelog_client cls_timeindex_client cls_version_client
     cls_replica_log_client cls_user_client curl global expat)
-
-  if(HAVE_BOOST_ASIO_COROUTINE)
-    target_compile_definitions(rgw_a PUBLIC "HAVE_BOOST_ASIO_COROUTINE")
-  endif()
 
   set(radosgw_srcs
     rgw/rgw_fcgi_process.cc

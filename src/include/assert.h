@@ -28,12 +28,12 @@ namespace ceph {
 struct BackTrace;
 #endif
 
-
 #ifdef HAVE_STATIC_CAST
 # define __CEPH_ASSERT_VOID_CAST static_cast<void>
 #else
 # define __CEPH_ASSERT_VOID_CAST (void)
 #endif
+
 
 /*
  * For GNU, test specific version features. Otherwise (e.g. LLVM) we'll use
